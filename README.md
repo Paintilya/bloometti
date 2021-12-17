@@ -1,2 +1,2 @@
-# Bloometti Discord bot
-Made with [Discord.js](https://discord.js.org/#/)
+# Bloometti
+A Discord bot made with [Discord.js](https://discord.js.org/#/)
