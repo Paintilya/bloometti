@@ -8,5 +8,5 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.reply({ content: '🥱', ephemeral: true });
         process.exit(0);
-	},
+	}
 };

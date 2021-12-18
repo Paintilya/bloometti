@@ -1,7 +1,7 @@
 // Import modules
 const fs = require('fs'); // File system
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json');
+const { token } = require('./config.json'); // Contains secret data such as the Discord Bot login token.
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
