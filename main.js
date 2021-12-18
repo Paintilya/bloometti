@@ -1,15 +1,12 @@
-// Require the necessary modules
-const fs = require('fs');
+// Import modules
+const fs = require('fs'); // File system
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
-
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-
 client.commands = new Collection();
-
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
@@ -22,28 +19,11 @@ for (const file of commandFiles) {
 
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
-}
-
-
-// When the client is ready, run this code (only once)
-client.once('ready', () => {
-	console.log('Ready!');
-});
-
-client.on('interactionCreate', async interaction => {
-	if (interaction.isCommand()) {
-        const command = client.commands.get(interaction.commandName);
-
-        if (!command) return;
-    
-        try {
-            await command.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-        }
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args, client));
+    } else {
+        client.on(event.name, (...args) => event.execute(...args, client));
     }
-});
-
+}
 
 client.login(token);
