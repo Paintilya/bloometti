@@ -1,4 +1,4 @@
-// Require the necessary discord.js classes
+// Require the necessary modules
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
@@ -25,25 +25,23 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
-
-client.on('interactionCreate', interaction => {
-	console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
-});
-
-
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
+	if (interaction.isCommand()) {
+        const command = client.commands.get(interaction.commandName);
 
-	const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+    
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    } else if (interaction.isButton()) {
+        console.log(interaction);
+    }
 
-	if (!command) return;
 
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
 });
 
 
