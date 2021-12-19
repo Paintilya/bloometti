@@ -20,7 +20,7 @@ module.exports = {
 
         const authorId = interaction.user.id
 
-		await interaction.reply({ content: 'Yes or no ?', components: [row]});
+		await interaction.reply({ ephemeral: true, content: 'Yes or no ?', components: [row]});
 
         const filter = interaction => interaction.customId === 'yes' || interaction.customId === 'no';
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
@@ -28,10 +28,10 @@ module.exports = {
         collector.on('collect', async interaction => {
             if (interaction.user.id === authorId) {
                 if (interaction.customId === 'yes') {
-                    await interaction.update({ content: 'Yes was clicked!', components: [] });
+                    await interaction.update({ ephemeral: true, content: 'Yes was clicked!', components: [] });
                     collector.stop();
                 } else {
-                    await interaction.update({ content: 'No was clicked!', components: [] });
+                    await interaction.update({ ephemeral: true, content: 'No was clicked!', components: [] });
                     collector.stop();
                 }
             } else {

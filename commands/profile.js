@@ -38,6 +38,6 @@ module.exports = {
         context.drawImage(avatar, 25, 25, 200, 200);
 
         const attachment = new MessageAttachment(canvas.toBuffer(), 'profile-image.png');
-        interaction.reply({files: [attachment]});
+        interaction.reply({ephemeral: true, files: [attachment]});
 	}
 };
