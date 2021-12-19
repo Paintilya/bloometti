@@ -1,0 +1,2 @@
+- Discord.JS latest version
+- PM2 latest version (to start/stop in background and monitor resources usage)
