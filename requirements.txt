@@ -1,2 +1,4 @@
 - Discord.JS latest version
-- PM2 latest version (to start/stop in background and monitor resources usage)
+- PM2 latest version (to start/stop in background and monitor resources usage) (https://pm2.keymetrics.io/)
+- Canvas (Image Manipulation) (https://discordjs.guide/popular-topics/canvas.html#other-distributions)
+- npm install @discordjs/rest discord-api-types (Registering slash commands with deploy-commands.js) (https://discordjs.guide/interactions/registering-slash-commands.html#guild-commands)
