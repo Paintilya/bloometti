@@ -17,22 +17,22 @@ module.exports = {
         const chosenUser = interaction.options.getUser('user');
 
         if (chosenUser == null) { 
-            const user = await functions.findData(interaction.user.id, "inventories")
+            const user = await functions.findData(interaction.user.id, 'inventories')
 
             const balance = new MessageEmbed()
             .setColor(bloomered)
             .setAuthor(`${interaction.user.username} 💳`, `${interaction.user.avatarURL()}`)
-            .setTitle(`${user.bankBalance} $`)
+            .setTitle(`${user.bankBalance} ฿`)
             .setTimestamp()
 
             await interaction.reply({ ephemeral: defaultEphemeral, embeds: [balance] });
         } else {
-            const user = await functions.findData(chosenUser.id, "inventories");
+            const user = await functions.findData(chosenUser.id, 'inventories');
 
             const balance = new MessageEmbed()
             .setColor(bloomered)
             .setAuthor(`${user.name}'s balance 💳`, `${chosenUser.avatarURL()}`)
-            .setTitle(`${user.bankBalance} $`)
+            .setTitle(`${user.bankBalance} ฿`)
             .setTimestamp()
             .setFooter(`Requested by ${interaction.user.tag}`, `${interaction.user.avatarURL()}`);
 

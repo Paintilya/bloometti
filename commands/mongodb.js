@@ -5,16 +5,14 @@ const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('mongodb')
-		.setDescription('Database testing'),
+		.setDescription('Database manipulation.'),
 
 	async execute(interaction) {
         // Verify if user has permission to use the command
-        if (!functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: true, content: 'You can\'t use this command!'}); return };
+        //if (!functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: true, content: 'You can\'t use this command!'}); return };
+        const user = await functions.findData(interaction.user.id, 'users');
+        console.log(user.username);
+    
 
-        // Finds the user's information
-        const user = await functions.findData(interaction.user.id, "users")
-        const username = user.username;
-
-        await interaction.reply({ ephemeral: defaultEphemeral, content: `Hello, ${username}` });
     }
 };

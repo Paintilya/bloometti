@@ -1,5 +1,6 @@
 {
     "bloomered": "#FE0C56",
     "defaultEphemeral": false,
-    "xpRate": 1
+    "chattingExpMultiplier": 1,
+    "chattingExpDelayInSeconds": 60
 }

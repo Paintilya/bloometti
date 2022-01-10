@@ -1,4 +1,1 @@
-experienceNextLevel = (currentLevel x nextLevel) * 50
-
-5329 / Level 6
-
+experienceNextLevel = (currentLevel * nextLevel) * 50
