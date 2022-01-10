@@ -1,0 +1,2 @@
+Buttons: "buttonname-commandname-panelname"
+    ex: "next-shop-page3"
