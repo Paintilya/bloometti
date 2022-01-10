@@ -4,7 +4,11 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json'); // 'config.json' contains secret data such as the Discord Bot login token.
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const myIntents = new Intents();
+
+// Add intents
+myIntents.add(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES);
+const client = new Client({ intents: myIntents });
 
 client.commands = new Collection();
 

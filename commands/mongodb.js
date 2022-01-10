@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const functions = require('../functions/functions.js');
+const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()

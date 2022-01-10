@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const functions = require('../functions/functions.js');
-const { color, defaultEphemeral } = require('../config.json'); // Import the configured color for the bot
+const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 
 
 module.exports = {
@@ -20,8 +20,8 @@ module.exports = {
             const user = await functions.findData(interaction.user.id, "inventories")
 
             const balance = new MessageEmbed()
-            .setColor(color)
-            .setAuthor(`${interaction.user.username}`, `${interaction.user.avatarURL()}`)
+            .setColor(bloomered)
+            .setAuthor(`${interaction.user.username} 💳`, `${interaction.user.avatarURL()}`)
             .setTitle(`${user.bankBalance} $`)
             .setTimestamp()
 
@@ -30,8 +30,8 @@ module.exports = {
             const user = await functions.findData(chosenUser.id, "inventories");
 
             const balance = new MessageEmbed()
-            .setColor(color)
-            .setAuthor(`${user.name}'s balance`, `${chosenUser.avatarURL()}`)
+            .setColor(bloomered)
+            .setAuthor(`${user.name}'s balance 💳`, `${chosenUser.avatarURL()}`)
             .setTitle(`${user.bankBalance} $`)
             .setTimestamp()
             .setFooter(`Requested by ${interaction.user.tag}`, `${interaction.user.avatarURL()}`);

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageAttachment } = require('discord.js');
 const Canvas = require('canvas');
+const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
