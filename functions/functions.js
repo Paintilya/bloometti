@@ -15,13 +15,19 @@ exports.isDeveloper = async function(userId) {
     return false;
 };
 
-exports.findData = async function (userId, collectionName) {
+exports.findData = async function(userId, collectionName) {
     await client.connect();
     const dbo = client.db("bloometti");
     const collection = dbo.collection(collectionName);
     const query = { discordID: Long.fromString(userId) };
     const user = await collection.findOne(query);
     return user;
+};
+
+exports.randomInt = function(min, max) {
+    return Math.floor(
+        Math.random() * (max - min + 1) + min
+    )
 };
 
 exports.templateFunction = function() {

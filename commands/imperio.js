@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const functions = require('../functions/functions.js');
+const { color, defaultEphemeral } = require('../config.json'); // Import the configured color for the bot
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,8 +13,8 @@ module.exports = {
 
 	async execute(interaction) {
         // Verify if user has permission to use the command
-        if (!functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: true, content: 'You can\'t use this command!'}); return }
+        if (!functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: defaultEphemeral, content: 'You can\'t use this command!'}); return }
         await interaction.channel.send(interaction.options.getString('message'));
-        await interaction.reply({ ephemeral: true, content: 'Message sent.' });
+        await interaction.reply({ ephemeral: defaultEphemeral, content: 'Message sent.' });
 	}
 };

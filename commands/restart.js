@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const functions = require('../functions/functions.js');
+const { color, defaultEphemeral } = require('../config.json'); // Import the configured color for the bot
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,10 +24,9 @@ module.exports = {
                 .setStyle('DANGER'),
         );
 
-        await interaction.reply({ ephemeral: true, content: 'Are you sure you want to restart the bot ?', components: [buttons] });
+        await interaction.reply({ ephemeral: defaultEphemeral, content: 'Are you sure you want to restart the bot ?', components: [buttons] });
 
         const botAnswer = interaction; // Stores the first interaction, which contains the bot's reply. Used to modify the reply when the collector ends
-
         const authorId = interaction.user.id // Stores the ID of the user that used the command
 
         // A filter for collected interactions to see if they're from the right user and right button
@@ -35,14 +35,14 @@ module.exports = {
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 
         collector.on('collect', async interaction => {
-                if (interaction.customId == 'yes-restart') { await interaction.update({ ephemeral: true, content: 'Restarted.', components: [] }); collector.stop(0); process.exit(0); }
-                if (interaction.customId == 'no-restart') await interaction.update({ ephemeral: true, content: 'Restart cancelled.', components: [] }); collector.stop(0);
+                if (interaction.customId == 'yes-restart') { await interaction.update({ ephemeral: defaultEphemeral, content: 'Restarted.', components: [] }); collector.stop(0); process.exit(0); }
+                if (interaction.customId == 'no-restart') await interaction.update({ ephemeral: defaultEphemeral, content: 'Restart cancelled.', components: [] }); collector.stop(0);
             }
         );
 
         // Executes when the time runs out
         collector.on('end', (interaction, reason) => {
-            if (reason != 0) botAnswer.editReply({ ephemeral: true, content: 'Time out.', components: [] });
+            if (reason != 0) botAnswer.editReply({ ephemeral: defaultEphemeral, content: 'Time out.', components: [] });
         });
 	}
 };

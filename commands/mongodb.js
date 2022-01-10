@@ -14,6 +14,6 @@ module.exports = {
         const user = await functions.findData(interaction.user.id, "users")
         const username = user.username;
 
-        await interaction.reply({ ephemeral: true, content: `Hello, ${username}` });
+        await interaction.reply({ ephemeral: defaultEphemeral, content: `Hello, ${username}` });
     }
 };
