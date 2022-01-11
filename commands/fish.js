@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 const functions = require('../functions/functions.js');
 const { bloomered, defaultEphemeral } = require('../main_parameters.json');
