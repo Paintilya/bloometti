@@ -119,7 +119,7 @@ exports.hasLevelledUpChatting = function(level, expTowardsNextLevel) {
 }
 
 exports.timeSinceEpoch = function() {
-    return Math.round(Date.now() / 1000)
+    return Math.round(Date.now() / 1000);
 }
 
 exports.templateFunction = function() {

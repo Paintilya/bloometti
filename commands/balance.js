@@ -14,6 +14,9 @@ module.exports = {
                 .setRequired(false)),
 
 	async execute(interaction) {
+
+        // TODO: verify if user exists in database or not
+
         const chosenUser = interaction.options.getUser('user');
 
         if (chosenUser == null) { 
