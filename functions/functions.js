@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const URL = 'mongodb://localhost:27017';
 const client = new MongoClient(URL);
+const { bloomered } = require('../main_parameters.json');
 
 // A function to verify if a user is a Bloometti developer using it's Discord user ID
 // Later will be changed to looking for the rank in the database or something
@@ -54,7 +55,8 @@ exports.newUser = async function(userId, username) {
         discordId: userId,
         username: username,
         rankId: 0,
-        ephemeral: false
+        ephemeral: false,
+        color: bloomered
     }
 
     const userChatting = {
@@ -87,14 +89,14 @@ exports.newCollection = async function(collectionName) {
 };
 
 // Sets chatting stats using parameters
-exports.setChattingStats = async function(discordId, username, newMessageCount, newExp, newLevel, newExpTowardsNextLevel, newLastMessageTime) {
+exports.setChattingStats = async function(userId, username, newMessageCount, newExp, newLevel, newExpTowardsNextLevel, newLastMessageTime) {
     await client.connect();
     const dbo = client.db('bloometti');
     const collection = dbo.collection('chatting');
 
     const userChatting = {
         $set: {
-            discordId: discordId,
+            discordId: userId,
             username: username,
             messageCount: newMessageCount,
             exp: newExp,
@@ -104,7 +106,7 @@ exports.setChattingStats = async function(discordId, username, newMessageCount, 
         }
     };
     
-    await collection.updateOne({discordId: discordId}, userChatting);
+    await collection.updateOne({discordId: userId}, userChatting);
 };
 
 // Verify if a user has levelled up and returns an array: [true/false, newExpTowardsNextLevel]
@@ -116,12 +118,35 @@ exports.hasLevelledUpChatting = function(level, expTowardsNextLevel) {
         return [true, newExpTowardsNextLevel];
     }
     return [false, expTowardsNextLevel];
-}
+};
 
 exports.timeSinceEpoch = function() {
     return Math.round(Date.now() / 1000);
-}
+};
 
 exports.templateFunction = function() {
     console.log('Template function');
+};
+
+exports.getUserColor = async function(userId) {
+    await client.connect();
+    const dbo = client.db('bloometti');
+    const collection = dbo.collection('users');
+    const query = { discordId: userId };
+    const user = await collection.findOne(query);
+    return user.color;
+};
+
+exports.setUserColor = async function(userId, color) {
+    await client.connect();
+    const dbo = client.db('bloometti');
+    const collection = dbo.collection('users');
+
+    const colorUpdate = {
+        $set: {
+            color: color
+        }
+    };
+    
+    await collection.updateOne({discordId: userId}, colorUpdate);
 };

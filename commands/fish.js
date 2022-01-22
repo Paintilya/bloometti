@@ -1,8 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed, MessageAttachment } = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 const functions = require('../functions/functions.js');
 const { bloomered, defaultEphemeral } = require('../main_parameters.json');
+const fs = require('fs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -18,11 +19,38 @@ module.exports = {
                     .setStyle('PRIMARY'),
             );
 
-		await interaction.reply({ ephemeral: defaultEphemeral, content: 'Fishing started'});
+        const animation_images = fs.readdirSync('./media/fishing/boats/boat1/catch_animation').filter(file => file.endsWith('.png'));
+        var animation = [];
+
+        for (const image of animation_images) {
+            const frame = `../media/fishing/boats/boat1/catch_animation/${image}`;
+            animation.push(frame);
+        }
+
+        console.log(animation);
+
+        var attachment = new MessageAttachment('./media/fishing/boats/boat1/boat1.png');
+
+        const start = new MessageEmbed()
+        .setColor(bloomered)
+        .setTitle('The fishing session has started.')
+        .setImage('attachment://boat1.png')
+        .setTimestamp()
+
+        await interaction.reply({ ephemeral: defaultEphemeral, embeds: [start], files: [attachment]});
 
         await wait(functions.randomInt(5, 10) * 1000);
 
-        interaction.editReply({ ephemeral: defaultEphemeral, content: 'Something took the bait!', components: [catchButton] });
+        attachment = new MessageAttachment('./media/fishing/boats/boat1/boat1_indicator.png');
+
+        const indicator = new MessageEmbed()
+        .setColor(bloomered)
+        .setTitle('The fishing session has started.')
+        .setImage('attachment://boat1_indicator.png')
+        .setTimestamp()
+        
+        await interaction.editReply({ ephemeral: defaultEphemeral, embeds: [indicator], files: [attachment]});
+        await interaction.editReply({ ephemeral: defaultEphemeral, embeds: [indicator], files: [attachment]});
 
         const authorId = interaction.user.id // Stores the ID of the user that used the command
         const botAnswer = interaction; // Stores the first interaction, which contains the bot's reply. Used to modify the reply when the collector ends

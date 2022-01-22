@@ -14,32 +14,44 @@ module.exports = {
                 .setRequired(false)),
 
 	async execute(interaction) {
-
-        // TODO: verify if user exists in database or not
-
         const chosenUser = interaction.options.getUser('user');
+        var balanceEmbed;
 
-        if (chosenUser == null) { 
-            const user = await functions.findData(interaction.user.id, 'inventories')
+        // Determines the embed content depending on the user to display
+        if (chosenUser == null) {
+            const user = await functions.findData(interaction.user.id, 'bankAccounts');
+            const userColor = await functions.getUserColor(interaction.user.id);
 
-            const balance = new MessageEmbed()
-            .setColor(bloomered)
+            // If the user does not exist in the database
+            if (user == null) {
+                await interaction.reply({ ephemeral: defaultEphemeral, content: 'This user isn\'t registered yet.' });
+                return
+            }
+
+            balanceEmbed = new MessageEmbed()
+            .setColor(userColor)
             .setAuthor(`${interaction.user.username} 💳`, `${interaction.user.avatarURL()}`)
-            .setTitle(`${user.bankBalance} ฿`)
+            .setDescription(`${user.bloomettiDollars} ฿`)
             .setTimestamp()
-
-            await interaction.reply({ ephemeral: defaultEphemeral, embeds: [balance] });
+            
         } else {
-            const user = await functions.findData(chosenUser.id, 'inventories');
+            const user = await functions.findData(chosenUser.id, 'bankAccounts');
+            const userColor = await functions.getUserColor(interaction.user.id);
 
-            const balance = new MessageEmbed()
-            .setColor(bloomered)
-            .setAuthor(`${user.name}'s balance 💳`, `${chosenUser.avatarURL()}`)
-            .setTitle(`${user.bankBalance} ฿`)
+            // If the user does not exist in the database
+            if (user == null) {
+                await interaction.reply({ ephemeral: defaultEphemeral, content: 'This user isn\'t registered yet.' });
+                return
+            }
+
+            balanceEmbed = new MessageEmbed()
+            .setColor(userColor)
+            .setAuthor(`${user.username}'s balance 💳`, `${chosenUser.avatarURL()}`)
+            .setDescription(`${user.bloomettiDollars} ฿`)
             .setTimestamp()
-            .setFooter(`Requested by ${interaction.user.tag}`, `${interaction.user.avatarURL()}`);
-
-            await interaction.reply({ ephemeral: defaultEphemeral, embeds: [balance] });
+            .setFooter(`Requested by ${interaction.user.tag}`, `${interaction.user.avatarURL()}`)
         }
+
+        await interaction.reply({ ephemeral: defaultEphemeral, embeds: [balanceEmbed] });
     }
 };
