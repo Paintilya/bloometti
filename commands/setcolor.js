@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 const Canvas = require('canvas');
-const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 const functions = require('../functions/functions.js');
 
 module.exports = {
@@ -9,13 +8,14 @@ module.exports = {
 		.setName('setcolor')
 		.setDescription('Set the color that the bot will use for you.')
         .addStringOption(option =>
-            option.setName('color')
+            option.setName('hexcode')
                 .setDescription('Color code (Hexadecimal, e.g.: "#FE0C56"; use a color picker to find the hex code of a color)')
                 .setRequired(true)),
 
 	async execute(interaction) {
+        const ephemeralMode = await functions.getEphemeralMode(interaction.user.id);
         const validHexPattern = /^#[0-9A-F]{6}$/i;
-        const valueGiven = interaction.options.getString('color');
+        const valueGiven = interaction.options.getString('hexcode');
 
         if (validHexPattern.test(valueGiven)) { 
             await functions.setUserColor(interaction.user.id, valueGiven);
@@ -32,7 +32,7 @@ module.exports = {
             .setTitle(`Color set to: ${valueGiven.toUpperCase()}`)
             .setImage('attachment://color.png')
 
-            interaction.reply({ ephemeral: defaultEphemeral, embeds: [output], files: [attachment]});
+            interaction.reply({ ephemeral: ephemeralMode, embeds: [output], files: [attachment]});
         } else {
             interaction.reply('This isn\'t a valid hex string, please try again.');
         }

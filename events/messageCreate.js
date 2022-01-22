@@ -4,9 +4,6 @@ const { chattingExpMultiplier, chattingExpDelayInSeconds } = require('../main_pa
 module.exports = {
     name: 'messageCreate',
     async execute(message, client) {
-
-        // TODO: update username every message on all collections so that it stays up to date.
-
         if (message.author.bot) return
 
         var user = await functions.findData(message.author.id, 'chatting');
@@ -16,7 +13,7 @@ module.exports = {
             user = await functions.findData(message.author.id, 'chatting');
         }
 
-        // username update here
+        await functions.updateUsername(message.author.id, message.author.username);
 
         if ((functions.timeSinceEpoch() - user.lastMessageTime) < chattingExpDelayInSeconds) return
 

@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 const Canvas = require('canvas');
-const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 const functions = require('../functions/functions.js');
 
 module.exports = {
@@ -15,6 +14,7 @@ module.exports = {
 
 	async execute(interaction) {
         const chosenUser = interaction.options.getUser('user');
+        const ephemeralMode = await functions.getEphemeralMode(interaction.user.id);
 
         // Progress bar creation: Canvas and background
         const canvas = Canvas.createCanvas(1000, 35);
@@ -33,7 +33,7 @@ module.exports = {
 
             // If the user does not exist in the database
             if (user == null) {
-                await interaction.reply({ ephemeral: defaultEphemeral, content: 'This user isn\'t registered yet.' });
+                await interaction.reply({ ephemeral: ephemeralMode, content: 'This user isn\'t registered yet.' });
                 return
             }
 
@@ -50,7 +50,7 @@ module.exports = {
 
             // If the user does not exist in the database
             if (user == null) {
-                await interaction.reply({ ephemeral: defaultEphemeral, content: 'This user isn\'t registered yet.' });
+                await interaction.reply({ ephemeral: ephemeralMode, content: 'This user isn\'t registered yet.' });
                 return
             }
 
@@ -72,6 +72,6 @@ module.exports = {
         // Export the progress bar image as png
         const attachment = new MessageAttachment(canvas.toBuffer(), 'profile-image.png'); // Export canvas to an image
 
-        interaction.reply({embeds: [profileEmbed], files: [attachment]});
+        interaction.reply({ephemeral: ephemeralMode, embeds: [profileEmbed], files: [attachment]});
 	}
 };

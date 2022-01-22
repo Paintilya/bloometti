@@ -11,7 +11,7 @@ exports.isDeveloper = async function(userId) {
     const collection = dbo.collection('users');
     const query = { discordId: userId };
     const user = await collection.findOne(query);
-    if (user.rankID == 1) return true;
+    if (user.rankId == 1) return true;
     return false;
 };
 
@@ -142,11 +142,52 @@ exports.setUserColor = async function(userId, color) {
     const dbo = client.db('bloometti');
     const collection = dbo.collection('users');
 
-    const colorUpdate = {
+    const update = {
         $set: {
             color: color
         }
     };
     
-    await collection.updateOne({discordId: userId}, colorUpdate);
+    await collection.updateOne({discordId: userId}, update);
+};
+
+exports.getEphemeralMode = async function(userId) {
+    await client.connect();
+    const dbo = client.db('bloometti');
+    const collection = dbo.collection('users');
+    const query = { discordId: userId };
+    const user = await collection.findOne(query);
+    return user.ephemeral;
+};
+
+exports.setEphemeralMode = async function(userId, value) {
+    await client.connect();
+    const dbo = client.db('bloometti');
+    const collection = dbo.collection('users');
+
+    const update = {
+        $set: {
+            ephemeral: value
+        }
+    };
+    
+    await collection.updateOne({discordId: userId}, update);
+};
+
+exports.updateUsername = async function(userId, username) {
+    await client.connect();
+    const dbo = client.db('bloometti');
+    const users = dbo.collection('users');
+    const chatting = dbo.collection('chatting');
+    const bankAccounts = dbo.collection('bankAccounts');
+
+    const update = {
+        $set: {
+            username: username
+        }
+    };
+    
+    await users.updateOne({discordId: userId}, update);
+    await chatting.updateOne({discordId: userId}, update);
+    await bankAccounts.updateOne({discordId: userId}, update);
 };

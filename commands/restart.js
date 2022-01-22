@@ -1,13 +1,13 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const functions = require('../functions/functions.js');
-const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('restart')
 		.setDescription('Restart the bot.'),
 	async execute(interaction) {
+        const ephemeralMode = await functions.getEphemeralMode(interaction.user.id);
         // Verify if user has permission to use the command
         if (!await functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: true, content: 'You can\'t use this command!'}); return }
 
@@ -24,7 +24,7 @@ module.exports = {
                 .setStyle('DANGER'),
         );
 
-        await interaction.reply({ ephemeral: defaultEphemeral, content: 'Are you sure you want to restart the bot ?', components: [buttons] });
+        await interaction.reply({ ephemeral: ephemeralMode, content: 'Are you sure you want to restart the bot ?', components: [buttons] });
 
         const botAnswer = interaction; // Stores the first interaction, which contains the bot's reply. Used to modify the reply when the collector ends
         const authorId = interaction.user.id // Stores the ID of the user that used the command
@@ -35,14 +35,14 @@ module.exports = {
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 
         collector.on('collect', async interaction => {
-                if (interaction.customId == 'yes-restart') { await interaction.update({ ephemeral: defaultEphemeral, content: 'Restarted.', components: [] }); collector.stop(0); process.exit(0); }
-                if (interaction.customId == 'no-restart') await interaction.update({ ephemeral: defaultEphemeral, content: 'Restart cancelled.', components: [] }); collector.stop(0);
+                if (interaction.customId == 'yes-restart') { await interaction.update({ ephemeral: ephemeralMode, content: 'Restarted.', components: [] }); collector.stop(0); process.exit(0); }
+                if (interaction.customId == 'no-restart') await interaction.update({ ephemeral: ephemeralMode, content: 'Restart cancelled.', components: [] }); collector.stop(0);
             }
         );
 
         // Executes when the time runs out
         collector.on('end', (interaction, reason) => {
-            if (reason != 0) botAnswer.editReply({ ephemeral: defaultEphemeral, content: 'Time out.', components: [] });
+            if (reason != 0) botAnswer.editReply({ ephemeral: ephemeralMode, content: 'Time out.', components: [] });
         });
 	}
 };

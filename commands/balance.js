@@ -1,8 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const functions = require('../functions/functions.js');
-const { bloomered, defaultEphemeral } = require('../main_parameters.json');
-
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,6 +13,7 @@ module.exports = {
 
 	async execute(interaction) {
         const chosenUser = interaction.options.getUser('user');
+        const ephemeralMode = await functions.getEphemeralMode(interaction.user.id);
         var balanceEmbed;
 
         // Determines the embed content depending on the user to display
@@ -24,7 +23,7 @@ module.exports = {
 
             // If the user does not exist in the database
             if (user == null) {
-                await interaction.reply({ ephemeral: defaultEphemeral, content: 'This user isn\'t registered yet.' });
+                await interaction.reply({ ephemeral: ephemeralMode, content: 'This user isn\'t registered yet.' });
                 return
             }
 
@@ -40,7 +39,7 @@ module.exports = {
 
             // If the user does not exist in the database
             if (user == null) {
-                await interaction.reply({ ephemeral: defaultEphemeral, content: 'This user isn\'t registered yet.' });
+                await interaction.reply({ ephemeral: ephemeralMode, content: 'This user isn\'t registered yet.' });
                 return
             }
 
@@ -52,6 +51,6 @@ module.exports = {
             .setFooter(`Requested by ${interaction.user.tag}`, `${interaction.user.avatarURL()}`)
         }
 
-        await interaction.reply({ ephemeral: defaultEphemeral, embeds: [balanceEmbed] });
+        await interaction.reply({ ephemeral: ephemeralMode, embeds: [balanceEmbed] });
     }
 };

@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const functions = require('../functions/functions.js');
-const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,8 +12,8 @@ module.exports = {
 
 	async execute(interaction) {
         // Verify if user has permission to use the command
-        if (!functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: defaultEphemeral, content: 'You can\'t use this command!'}); return }
+        if (!await functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: true, content: 'You can\'t use this command!'}); return }
         await interaction.channel.send(interaction.options.getString('message'));
-        await interaction.reply({ ephemeral: defaultEphemeral, content: 'Message sent.' });
+        await interaction.reply({ ephemeral: true, content: 'Message sent.' });
 	}
 };

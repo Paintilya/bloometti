@@ -2,7 +2,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageAttachment } = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 const functions = require('../functions/functions.js');
-const { bloomered, defaultEphemeral } = require('../main_parameters.json');
 const fs = require('fs');
 
 module.exports = {
@@ -10,6 +9,7 @@ module.exports = {
 		.setName('fish')
 		.setDescription('Go fishing to find fishes and treasures !'),
 	async execute(interaction) {
+        const ephemeralMode = await functions.getEphemeralMode(interaction.user.id);
         // Message's buttons creation
         const catchButton = new MessageActionRow()
             .addComponents(
@@ -37,7 +37,7 @@ module.exports = {
         .setImage('attachment://boat1.png')
         .setTimestamp()
 
-        await interaction.reply({ ephemeral: defaultEphemeral, embeds: [start], files: [attachment]});
+        await interaction.reply({ ephemeral: ephemeralMode, embeds: [start], files: [attachment]});
 
         await wait(functions.randomInt(5, 10) * 1000);
 
@@ -49,8 +49,8 @@ module.exports = {
         .setImage('attachment://boat1_indicator.png')
         .setTimestamp()
         
-        await interaction.editReply({ ephemeral: defaultEphemeral, embeds: [indicator], files: [attachment]});
-        await interaction.editReply({ ephemeral: defaultEphemeral, embeds: [indicator], files: [attachment]});
+        await interaction.editReply({ ephemeral: ephemeralMode, embeds: [indicator], files: [attachment]});
+        await interaction.editReply({ ephemeral: ephemeralMode, embeds: [indicator], files: [attachment]});
 
         const authorId = interaction.user.id // Stores the ID of the user that used the command
         const botAnswer = interaction; // Stores the first interaction, which contains the bot's reply. Used to modify the reply when the collector ends
@@ -61,13 +61,13 @@ module.exports = {
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 1500 });
 
         collector.on('collect', async interaction => {
-            await interaction.update({ ephemeral: defaultEphemeral, content: 'You caught a fish!', components: [] });
+            await interaction.update({ ephemeral: ephemeralMode, content: 'You caught a fish!', components: [] });
             collector.stop(0);
         });
 
         // Executes when the time runs out
         collector.on('end', (interaction, reason) => {
-            if (reason != 0) botAnswer.editReply({ ephemeral: defaultEphemeral, content: 'It got away...', components: [] });
+            if (reason != 0) botAnswer.editReply({ ephemeral: ephemeralMode, content: 'It got away...', components: [] });
         });
 	}
 };
