@@ -19,7 +19,20 @@ module.exports = {
 
         if (validHexPattern.test(valueGiven)) { 
             await functions.setUserColor(interaction.user.id, valueGiven);
-            interaction.reply(`Color set to: ${valueGiven}`);
+
+            // Create the output colored square
+            const canvas = Canvas.createCanvas(32, 32);
+            const context = canvas.getContext('2d');
+            context.fillStyle = valueGiven;
+            context.fillRect(0, 0, canvas.width, canvas.height)
+            const attachment = new MessageAttachment(canvas.toBuffer(), 'color.png');
+
+            const output = new MessageEmbed()
+            .setColor(valueGiven)
+            .setTitle(`Color set to: ${valueGiven.toUpperCase()}`)
+            .setImage('attachment://color.png')
+
+            interaction.reply({ ephemeral: defaultEphemeral, embeds: [output], files: [attachment]});
         } else {
             interaction.reply('This isn\'t a valid hex string, please try again.');
         }
