@@ -6,7 +6,7 @@ module.exports = {
 		.setName('ping')
 		.setDescription('Get the current ping of the bot.'),
 
-	async execute(interaction) {
+	async execute(interaction, client) {
         const ephemeralMode = await functions.getEphemeralMode(interaction.user.id);
         interaction.reply({ ephemeral: ephemeralMode, content: `Current ping: ${client.ws.ping}ms`});
 	}
