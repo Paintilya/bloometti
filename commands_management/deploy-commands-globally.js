@@ -6,7 +6,8 @@ const { clientId, guildId, token } = require('../config.json');
 const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
-const ignoredCommands = ['fish.js', 'choice.js', 'mongodb.js']
+const ignoredCommands = ['fish.js', 'choice.js', 'mongodb.js'];
+const developerCommands = ['imperio.js', 'restart.js'];
 
 for (const file of commandFiles) {
     if (!ignoredCommands.includes(file)) { 
