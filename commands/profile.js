@@ -1,43 +1,77 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { Application, MessageAttachment } = require('discord.js');
+const { MessageAttachment, MessageEmbed } = require('discord.js');
 const Canvas = require('canvas');
+const functions = require('../functions/functions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('profile')
-		.setDescription('Show user profile.'),
-	async execute(interaction) {
-        const canvas = Canvas.createCanvas(700, 250);
-        const context = canvas.getContext('2d');
+		.setDescription('See your profile.')
+        .addUserOption(option =>
+            option.setName('user')
+                .setDescription('Mention a user to see their profile.')
+                .setRequired(false)),
 
+	async execute(interaction) {
+        const chosenUser = interaction.options.getUser('user');
+        const ephemeralMode = await functions.getEphemeralMode(interaction.user.id);
+
+        // Progress bar creation: Canvas and background
+        const canvas = Canvas.createCanvas(1000, 35);
+        const context = canvas.getContext('2d');
         const background = await Canvas.loadImage('./media/wallpaper.jpg');
         context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        // Select the font size and type from one of the natively available fonts
-        context.font = '60px Noto Mono';
+        var profileEmbed;
+        var user;
+        var userColor;
 
-        // Select the style that will be used to fill the text in
-        context.fillStyle = '#ffffff';
+        // Determines the embed content depending on the user to display
+        if (chosenUser == null) {
+            user = await functions.findData(interaction.user.id, 'chatting');
+            userColor = await functions.getUserColor(interaction.user.id);
 
-        // Actually fill the text with a solid color
-        context.fillText(interaction.user.tag.substring(0, interaction.user.tag.length - 5), canvas.width / 2.5, canvas.height / 1.8);
+            // If the user does not exist in the database
+            if (user == null) {
+                await interaction.reply({ ephemeral: ephemeralMode, content: 'This user isn\'t registered yet.' });
+                return
+            }
 
-        // Pick up the pen
-        context.beginPath();
+            profileEmbed = new MessageEmbed()
+            .setColor(userColor)
+            .setAuthor(`${interaction.user.username}`, `${interaction.user.avatarURL()}`)
+            .addField(`Level ${user.level}`, `${user.expTowardsNextLevel} / ${(user.level * (user.level + 1)) * 50}`, true)
+            .setImage('attachment://profile-image.png')
+            .setTimestamp()
 
-        // Start the arc to form a circle
-        context.arc(125, 125, 100, 0, Math.PI * 2, true);
+        } else {
+            user = await functions.findData(chosenUser.id, 'chatting');
+            userColor = await functions.getUserColor(interaction.user.id);
 
-        // Put the pen down
-        context.closePath();
+            // If the user does not exist in the database
+            if (user == null) {
+                await interaction.reply({ ephemeral: ephemeralMode, content: 'This user isn\'t registered yet.' });
+                return
+            }
 
-        // Clip off the region you drew on
-        context.clip();
+            profileEmbed = new MessageEmbed()
+            .setColor(userColor)
+            .setAuthor(`${chosenUser.username}`, `${chosenUser.avatarURL()}`)
+            .addField(`Level ${user.level}`, `${user.expTowardsNextLevel} / ${(user.level * (user.level + 1)) * 50}`, true)
+            .setImage('attachment://profile-image.png')
+            .setTimestamp()
+            .setFooter(`Requested by ${interaction.user.tag}`, `${interaction.user.avatarURL()}`)
+        }
 
-        const avatar = await Canvas.loadImage(interaction.user.displayAvatarURL({ format: 'jpg' }));
-        context.drawImage(avatar, 25, 25, 200, 200);
+        // Determines the completion percentage of the current level and fills the progress bar accordingly
+        const levelCompletionPercentage = Math.floor((user.expTowardsNextLevel / ((user.level * (user.level + 1)) * 100)) * 100);
 
-        const attachment = new MessageAttachment(canvas.toBuffer(), 'profile-image.png');
-        interaction.reply({ephemeral: true, files: [attachment]});
+        context.fillStyle = userColor;
+        context.fillRect(0, 0, 1000 * (levelCompletionPercentage / 100), 35);
+
+        // Export the progress bar image as png
+        const attachment = new MessageAttachment(canvas.toBuffer(), 'profile-image.png'); // Export canvas to an image
+
+        interaction.reply({ephemeral: ephemeralMode, embeds: [profileEmbed], files: [attachment]});
 	}
 };

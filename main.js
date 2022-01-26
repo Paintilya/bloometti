@@ -1,19 +1,22 @@
 // Import modules
-const fs = require('fs'); // File system
+const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json'); // Contains secret data such as the Discord Bot login token.
+const { token } = require('./config.json'); // 'config.json' contains secret data such as the Discord Bot login token.
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const myIntents = new Intents();
+
+// Add intents
+myIntents.add(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES);
+const client = new Client({ intents: myIntents });
 
 client.commands = new Collection();
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	// Set a new item in the Collection
-	// With the key as the command name and the value as the exported module
 	client.commands.set(command.data.name, command);
 }
 
@@ -27,3 +30,4 @@ for (const file of eventFiles) {
 }
 
 client.login(token);
+
