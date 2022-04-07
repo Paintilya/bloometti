@@ -14,6 +14,7 @@ module.exports = {
         // Verify if user has permission to use the command
         if (!await functions.isDeveloper(interaction.user.id)) { await interaction.reply({ ephemeral: true, content: 'You can\'t use this command!'}); return }
         await interaction.channel.send(interaction.options.getString('message'));
+        
         await interaction.reply({ ephemeral: true, content: 'Message sent.' });
 	}
 };

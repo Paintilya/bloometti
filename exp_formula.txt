@@ -1,1 +1,1 @@
-experienceNextLevel = (currentLevel * nextLevel) * 50
+experienceToNextLevel = (currentLevel * nextLevel) * 50
