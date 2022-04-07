@@ -1,5 +1,5 @@
 # Bloometti
-A Discord bot made with [Discord.js](https://discord.js.org/#/)
+A Discord bot made with [Discord.js](https://discord.js.org/#/) in [Node.JS](https://nodejs.org/en/)
 
 ## Dependencies
 - [Discord.JS](https://discord.js.org/#/) (13.6.0)
