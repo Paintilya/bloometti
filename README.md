@@ -8,3 +8,4 @@ A Discord bot made with [Discord.js](https://discord.js.org/#/) in [Node.JS](htt
 - [Discord.JS / discord-api-types](https://github.com/discordjs/discord-api-types/) (Latest)
 - [PM2](https://pm2.keymetrics.io/) (Latest) (To start/stop in background and monitor resources usage)
 - [Canvas](https://github.com/Automattic/node-canvas) (Latest) (Image Manipulation)
+- [MongoDB](https://www.mongodb.com/docs/drivers/node/current/) (Latest) (Database)
